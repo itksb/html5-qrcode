@@ -2,9 +2,9 @@
  * @fileoverview
  * Complete Scanner build on top of {@link Html5Qrcode}.
  * - Decode QR Code using web cam or smartphone camera
- * 
+ *
  * @author mebjas <minhazav@gmail.com>
- * 
+ *
  * The word "QR Code" is registered trademark of DENSO WAVE INCORPORATED
  * http://www.denso-wave.com/qrcode/faqpatent-e.html
  */
@@ -30,7 +30,7 @@ import {
 
 import {
     Html5QrcodeScannerStrings,
-} from "./strings";
+} from "./strings_ru";
 
 import {
     ASSET_FILE_SCAN,
@@ -97,7 +97,7 @@ export class Html5QrcodeScanner {
      *
      * @param elementId Id of the HTML element.
      * @param config Extra configurations to tune the code scanner.
-     * @param verbose - If true, all logs would be printed to console. 
+     * @param verbose - If true, all logs would be printed to console.
      */
     public constructor(
         elementId: string,
@@ -118,7 +118,7 @@ export class Html5QrcodeScanner {
 
     /**
      * Renders the User Interface.
-     * 
+     *
      * @param qrCodeSuccessCallback Callback called when an instance of a QR
      * code or any other supported bar code is found.
      * @param qrCodeErrorCallback optional, callback called in cases where no
@@ -168,7 +168,7 @@ export class Html5QrcodeScanner {
 
     /**
      * Removes the QR Code scanner UI.
-     * 
+     *
      * @returns Promise which succeeds if the cleanup is complete successfully,
      *  fails otherwise.
      */
@@ -526,7 +526,7 @@ export class Html5QrcodeScanner {
             $this.getFileScanInput().value = "";
 
             $this.sectionSwapAllowed = false;
-            
+
             if ($this.currentScanType === Html5QrcodeScanType.SCAN_TYPE_CAMERA) {
                 // swap to file
                 $this.clearScanRegion();
