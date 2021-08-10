@@ -75,7 +75,7 @@ export class Html5QrcodeScannerStrings {
     }
 
     public static codeScannerTitle(): string {
-        return "Сканер кода";
+        return "Сканер EAN_13";
     }
 
     public static cameraPermissionTitle(): string {
@@ -91,7 +91,7 @@ export class Html5QrcodeScannerStrings {
     }
 
     public static scanButtonStartScanningText(): string {
-        return "Старт сканирования";
+        return "Старт сканирования камерой";
     }
 
     /**
@@ -100,7 +100,7 @@ export class Html5QrcodeScannerStrings {
      * This will be used to switch to file based scanning.
      */
     public static textIfCameraScanSelected(): string {
-        return "Сканировать картинку из файла";
+        return "Выбрать из галереи устройства";
     }
 
     /**
@@ -109,6 +109,6 @@ export class Html5QrcodeScannerStrings {
      * This will be used to switch to camera based scanning.
      */
     public static textIfFileScanSelected(): string {
-        return "Сканировать используя камеру";
+        return "Сканировать через Камеру";
     }
 }

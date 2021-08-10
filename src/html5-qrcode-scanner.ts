@@ -268,9 +268,9 @@ export class Html5QrcodeScanner {
         dashboard.appendChild(header);
 
         const titleSpan = document.createElement("span");
-        const titleLink = document.createElement("a");
+        const titleLink = document.createElement("span");
         titleLink.innerText = Html5QrcodeScannerStrings.codeScannerTitle();
-        titleLink.href = Html5QrcodeConstants.GITHUB_PROJECT_URL;
+        //titleLink.href = Html5QrcodeConstants.GITHUB_PROJECT_URL;
         titleSpan.appendChild(titleLink);
         header.appendChild(titleSpan);
 
@@ -324,7 +324,8 @@ export class Html5QrcodeScanner {
             = Html5QrcodeScannerStrings.cameraPermissionTitle();
 
         const $this = this;
-        requestPermissionButton.addEventListener("click", function () {
+
+        const permissionButtonClickHandler =  function () {
             requestPermissionButton.disabled = true;
             $this.setStatus(Html5QrcodeScannerStrings.permissionStatus());
             $this.setHeaderMessage(
@@ -345,10 +346,14 @@ export class Html5QrcodeScanner {
                 requestPermissionButton.disabled = false;
                 $this.setStatus(Html5QrcodeScannerStrings.idleStatus());
                 $this.setHeaderMessage(
-                    error, Html5QrcodeScannerStatus.STATUS_WARNING);
+                    'Устройство сканирования не обнаружено', Html5QrcodeScannerStatus.STATUS_WARNING);
+                $this.logger.logError(
+                    "getCameras", error);
             });
-        });
-        requestPermissionContainer.appendChild(requestPermissionButton);
+        };
+
+        // requestPermissionButton.addEventListener("click", permissionButtonClickHandler);
+        // requestPermissionContainer.appendChild(requestPermissionButton);
         scpCameraScanRegion.appendChild(requestPermissionContainer);
 
         const fileBasedScanRegion = document.createElement("div");
@@ -360,14 +365,19 @@ export class Html5QrcodeScanner {
         sectionControlPanel.appendChild(fileBasedScanRegion);
 
         const fileScanInput = document.createElement("input");
+
         fileScanInput.id = this.getFileScanInputId();
         fileScanInput.accept = "image/*";
         fileScanInput.type = "file";
-        fileScanInput.style.width = "200px";
+        fileScanInput.style.display = "none";
+        //fileScanInput.style.width = "200px";
+
         fileScanInput.disabled
             = this.currentScanType === Html5QrcodeScanType.SCAN_TYPE_CAMERA;
-        const fileScanLabel = document.createElement("span");
-        fileScanLabel.innerText = " Select Image";
+        const fileScanLabel = document.createElement("label");
+        fileScanLabel.htmlFor = fileScanInput.id;
+        fileScanLabel.innerText = "Выбрать фото";
+        fileScanLabel.className = "button-component custom-file-input";
         fileBasedScanRegion.appendChild(fileScanInput);
         fileBasedScanRegion.appendChild(fileScanLabel);
         fileScanInput.addEventListener("change", (e: any) => {
@@ -397,11 +407,14 @@ export class Html5QrcodeScanner {
                         Html5QrcodeScannerStrings.errorStatus(),
                         Html5QrcodeScannerStatus.STATUS_WARNING);
                     $this.setHeaderMessage(
-                        error, Html5QrcodeScannerStatus.STATUS_WARNING);
+                        'Штрих-код не обнаружен. Попробуйте снова.', Html5QrcodeScannerStatus.STATUS_WARNING);
+                    $this.logger.logError(error);
                     $this.qrCodeErrorCallback!(
                         error, Html5QrcodeErrorFactory.createFrom(error));
                 });
         });
+
+        permissionButtonClickHandler();
     }
 
     private renderCameraSelection(cameras: Array<CameraDevice>) {
@@ -409,10 +422,11 @@ export class Html5QrcodeScanner {
         const scpCameraScanRegion = document.getElementById(
             this.getDashboardSectionCameraScanRegionId())!;
         scpCameraScanRegion.style.textAlign = "center";
+       // scpCameraScanRegion.style.marginBottom = "10px";
 
         const cameraSelectionContainer = document.createElement("span");
         cameraSelectionContainer.innerText
-            = `Select Camera (${cameras.length})  `;
+            = `Выбор камеры (${cameras.length})  `;
         cameraSelectionContainer.style.marginRight = "10px";
 
         const cameraSelectionSelect = document.createElement("select");
@@ -424,7 +438,12 @@ export class Html5QrcodeScanner {
             option.value = value;
             option.innerText = name;
             cameraSelectionSelect.appendChild(option);
+            // select "back" camera by default
+            if (name.includes('back')) {
+                option.selected = true;
+            }
         }
+        cameraSelectionContainer.style.display = 'none'; // disable ui for camera selection
         cameraSelectionContainer.appendChild(cameraSelectionSelect);
         scpCameraScanRegion.appendChild(cameraSelectionContainer);
 
@@ -432,6 +451,7 @@ export class Html5QrcodeScanner {
         const cameraActionStartButton = document.createElement("button");
         cameraActionStartButton.innerText
             = Html5QrcodeScannerStrings.scanButtonStartScanningText();
+        cameraActionStartButton.className = "button-component search-view__button";
         cameraActionContainer.appendChild(cameraActionStartButton);
 
         const cameraActionStopButton = document.createElement("button");
@@ -439,6 +459,8 @@ export class Html5QrcodeScanner {
             = Html5QrcodeScannerStrings.scanButtonStopScanningText();
         cameraActionStopButton.style.display = "none";
         cameraActionStopButton.disabled = true;
+        cameraActionStopButton.className = "transparent-background button-component button-group__button button-group__button-cancel";
+
         cameraActionContainer.appendChild(cameraActionStopButton);
 
         scpCameraScanRegion.appendChild(cameraActionContainer);
@@ -465,7 +487,8 @@ export class Html5QrcodeScanner {
                     cameraActionStartButton.disabled = false;
                     $this.setStatus(Html5QrcodeScannerStrings.idleStatus());
                     $this.setHeaderMessage(
-                        error, Html5QrcodeScannerStatus.STATUS_WARNING);
+                        'Ошибка в процессе сканирования', Html5QrcodeScannerStatus.STATUS_WARNING);
+                    $this.logger.logError(error);
                 });
         });
 
