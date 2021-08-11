@@ -469,9 +469,12 @@ export class Html5QrcodeScanner {
             cameraSelectionSelect.disabled = true;
             cameraActionStartButton.disabled = true;
             $this.showHideScanTypeSwapLink(false);
-            const cameraId = cameraSelectionSelect.value;
+            // disable using user selected camera. Use back camera in all cases when possible
+            //const cameraId = cameraSelectionSelect.value;
+            /** @type MediaTrackConstraints mediaTrackConstraints */
+            const mediaTrackConstraints = {facingMode: "environment"};
             $this.html5Qrcode!.start(
-                cameraId,
+                mediaTrackConstraints,
                 toHtml5QrcodeCameraScanConfig($this.config),
                 $this.qrCodeSuccessCallback!,
                 $this.qrCodeErrorCallback!)
