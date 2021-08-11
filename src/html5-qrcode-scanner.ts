@@ -527,6 +527,7 @@ export class Html5QrcodeScanner {
         const section = document.getElementById(this.getDashboardSectionId())!;
         const switchContainer = document.createElement("div");
         switchContainer.style.textAlign = "center";
+        switchContainer.style.display = "none";
         const swithToFileBasedLink = document.createElement("a");
         swithToFileBasedLink.style.textDecoration = "underline";
         swithToFileBasedLink.id = this.getDashboardSectionSwapLinkId();
